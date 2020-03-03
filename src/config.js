@@ -1,20 +1,10 @@
-import { EVENTS } from './constants';
-
 export default {
     state: {
-        initial: 'loading',
-        events: [
+        init: 'loading',
+        transitions: [
             { name: 'play', from: 'loading', to: 'playing' },
-            { name: 'abandon', from: 'playing', to: 'over' },
             { name: 'lose', from: 'playing', to: 'over' },
         ],
+        methods: {},
     },
-    pubsub: [
-        {
-            name: EVENTS.PING,
-            action: function() {
-                this.onPing();
-            },
-        },
-    ],
 };

@@ -1,55 +1,66 @@
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HTMLWebpackPlugin = require('html-webpack-plugin')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HTMLWebpackPlugin = require('html-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const WebpackCdnPlugin = require('webpack-cdn-plugin');
+const DefinePlugin = require('webpack/lib/DefinePlugin');
 
 module.exports = {
     mode: 'production',
-    output: {publicPath: "./"},
+    output: { publicPath: './' },
     module: {
-        rules: [{
-            test: /\.(js)$/,
-            exclude: /node_modules/,
-            use: {
-                loader: 'babel-loader'
-            }
-        }]
+        rules: [
+            {
+                test: /\.(js)$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                },
+            },
+        ],
     },
     optimization: {
-        minimizer: [new UglifyJSPlugin({
-            uglifyOptions: {
-                output: {
-                    comments: false //use it for removing comments like "/*! ... */"
-                }
-            }
-        })]
+        minimizer: [
+            new UglifyJSPlugin({
+                uglifyOptions: {
+                    output: {
+                        comments: false, //use it for removing comments like "/*! ... */"
+                    },
+                },
+            }),
+        ],
     },
     plugins: [
-
-        new CopyWebpackPlugin([{
-			from: './src/assets',
-			to: './assets'
-		}]),
-		new HTMLWebpackPlugin({
-			template: './index.html',
+        new DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify('production'),
+            },
+        }),
+        new CopyWebpackPlugin([
+            {
+                from: './src/assets',
+                to: './assets',
+            },
+        ]),
+        new HTMLWebpackPlugin({
+            template: './index.html',
             filename: 'index.html',
             hash: true,
-            minify: false
+            minify: false,
         }),
         new WebpackCdnPlugin({
             modules: [
-              {
-                name: 'pixi.js',
-                var: 'PIXI',
-                path: 'dist/pixi.min.js'
-              },
-              {
-                name: 'animejs',
-                var: 'anime',
-                path: 'lib/anime.min.js'
-              }
+                {
+                    name: 'pixi.js',
+                    var: 'PIXI',
+                    path: 'dist/pixi.min.js',
+                },
+                {
+                    name: 'animejs',
+                    var: 'anime',
+                    path: 'lib/anime.min.js',
+                },
             ],
-            publicPath: '/node_modules'
-        })
-    ]
-}
+            publicPath: '/node_modules',
+        }),
+    ],
+};

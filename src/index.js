@@ -6,3 +6,5 @@ const app = new App({
     antialias: true, // default: false
     resolution: 1, // default: 1
 });
+
+document.body.appendChild(app.view);

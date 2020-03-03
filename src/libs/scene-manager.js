@@ -41,15 +41,18 @@ export default class SceneManager {
             }
 
             const ActiveScene = this._scenes[name];
-            if (!activeScene) throw new Error(`${name} scene is not exist`);
+
+            if (!ActiveScene) throw new Error(`${name} scene is not exist`);
 
             const activeScene = new ActiveScene(this._game);
 
             this._game.stage.addChildAt(activeScene, 0);
 
+            //console.log('SceneManager -> start -> typeof activeScene.create', typeof activeScene.create);
             //调用创建
             if (activeScene.create && typeof activeScene.create == 'function') {
                 activeScene.create();
+                activeScene.__isCreated = true;
             }
 
             const update = () => {

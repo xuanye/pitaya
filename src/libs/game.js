@@ -1,29 +1,37 @@
 import { Application } from 'pixi.js';
+import StateMachine from 'javascript-state-machine';
 import SceneManager from './scene-manager';
+import PubSub from 'pubsub-js';
 
 export default class Game extends Application {
-    constructor(...args) {
-        super(...args);
-        this.ssm = new SceneManager(); //simple scene manager
+    constructor(options) {
+        super(options);
+        this.ssm = new SceneManager(this); //simple scene manager
 
+        this.fsm = new StateMachine(this.createState()); //有限状态机  finite state machines
         this.init();
         this.preload();
 
         // 下载资源进度
-        this.loader.onProgress.add(this.progress);
+        this.loader.onProgress.add(this.progress.bind(this));
         //下载资源完成
-        this.loader.load(this.create);
+        this.loader.load(this.create.bind(this));
 
         //游戏主循环
-        this.ticker.add(this.update);
+        this.ticker.add(this.update.bind(this));
     }
-
+    createState() {
+        return {
+            transitions: [],
+        };
+    }
     /**
      * 添加场景
-     * @param  {...Scene} scenes 场景信息，可以多个
+     * @param {*} name 场景名称
+     * @param {*} scene 场景
      */
-    addScene(...scenes) {
-        this.ssm.add(scenes);
+    addScene(name, scene) {
+        this.ssm.add(name, scene);
         return this;
     }
 
@@ -58,5 +66,15 @@ export default class Game extends Application {
     /**
      * 主事件循环中
      */
-    update() {}
+    update(delta) {}
+
+    //---------------------
+    // 发布/订阅模式的简单封装
+    //---------------------
+    subscribe(...args) {
+        PubSub.subscribe(...args);
+    }
+    publish(...args) {
+        PubSub.publish(...args);
+    }
 }
