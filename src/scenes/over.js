@@ -2,10 +2,8 @@ import { Text, TextStyle } from 'pixi.js';
 import Scene from '../libs/scene';
 
 export default class OverScene extends Scene {
-    constructor(...args) {
-        super(args[0]);
-    }
     init() {
+        super.init();
         console.log('Over  init');
         this._angle = 0;
     }
@@ -13,6 +11,7 @@ export default class OverScene extends Scene {
         console.log('Over  preload');
     }
     pause() {
+        super.pause();
         console.log('Over  pause');
     }
     create() {
@@ -30,12 +29,18 @@ export default class OverScene extends Scene {
         });
         this.text = new Text('游戏结束...', style);
 
-        this.text.x = this._game.options.width / 2 - this.text.width / 2;
-        this.text.y = this._game.options.height / 2 - this.text.height / 2;
+        this.text.x = this.state.width / 2 - this.text.width / 2;
+        this.text.y = this.state.height / 2 - this.text.height / 2;
         this.addChild(this.text);
     }
     update() {
         //this.text.y += Math.cos(this._angle);
         //this._angle += 0.2;
+    }
+    onResize({ width, height }) {
+        this.state.width = width;
+        this.state.height = height;
+        this.text.x = width / 2 - this.text.width / 2;
+        this.text.y = height / 2 - this.text.height / 2;
     }
 }

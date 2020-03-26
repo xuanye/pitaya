@@ -2,10 +2,8 @@ import { Text, TextStyle } from 'pixi.js';
 import Scene from '../libs/scene';
 import constants from '../constants';
 export default class LoadingScene extends Scene {
-    constructor(...args) {
-        super(args[0]);
-    }
     init() {
+        super.init();
         console.log('loading  init');
         this._angle = 0;
     }
@@ -13,6 +11,7 @@ export default class LoadingScene extends Scene {
         console.log('loading  preload');
     }
     pause() {
+        super.pause();
         console.log('loading  pause');
     }
     create() {
@@ -31,8 +30,8 @@ export default class LoadingScene extends Scene {
         });
         this.text = new Text('点我进入游戏...', style);
 
-        this.text.x = this._game.options.width / 2 - this.text.width / 2;
-        this.text.y = this._game.options.height / 2 - this.text.height / 2;
+        this.text.x = this.state.width / 2 - this.text.width / 2;
+        this.text.y = this.state.height / 2 - this.text.height / 2;
 
         this.text.interactive = true;
         this.text.buttonMode = true;
@@ -44,5 +43,12 @@ export default class LoadingScene extends Scene {
     update() {
         this.text.y += Math.cos(this._angle);
         this._angle += 0.2;
+    }
+    onResize({ width, height }) {
+        console.log(width, height);
+        this.state.width = width;
+        this.state.height = height;
+        this.text.x = width / 2 - this.text.width / 2;
+        this.text.y = height / 2 - this.text.height / 2;
     }
 }

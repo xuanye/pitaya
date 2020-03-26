@@ -2,10 +2,8 @@ import { Text, TextStyle } from 'pixi.js';
 import Scene from '../libs/scene';
 import constants from '../constants';
 export default class PlayingScene extends Scene {
-    constructor(...args) {
-        super(args[0]);
-    }
     init() {
+        super.init();
         console.log('Playing  init');
         this._angle = 0;
     }
@@ -13,6 +11,7 @@ export default class PlayingScene extends Scene {
         console.log('Playing  preload');
     }
     pause() {
+        super.pause();
         console.log('Playing  pause');
     }
     create() {
@@ -30,8 +29,8 @@ export default class PlayingScene extends Scene {
         });
         this.text = new Text('Playing...', style);
 
-        this.text.x = this._game.options.width / 2 - this.text.width / 2;
-        this.text.y = this._game.options.height / 2 - this.text.height / 2;
+        this.text.x = this.state.width / 2 - this.text.width / 2;
+        this.text.y = this.state.height / 2 - this.text.height / 2;
         this.text.interactive = true;
         this.text.buttonMode = true;
         this.text.on('pointerdown', () => {
@@ -42,5 +41,11 @@ export default class PlayingScene extends Scene {
     update() {
         this.text.y += Math.cos(this._angle);
         this._angle += 0.2;
+    }
+    onResize({ width, height }) {
+        this.state.width = width;
+        this.state.height = height;
+        this.text.x = width / 2 - this.text.width / 2;
+        this.text.y = height / 2 - this.text.height / 2;
     }
 }

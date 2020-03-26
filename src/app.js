@@ -37,20 +37,8 @@ class App extends Game {
     }
 
     preload() {
-        this.loader.add('', '');
+        console.log(this.fsm.state);
     }
-
-    progress(loader, resources) {
-        console.log('Loading...', loader.progress);
-    }
-
-    create() {
-        console.log('App -> create -> this.state', this.fsm.state);
-        //默认开启初始状态
-        //this.startScene(this.fsm.state);
-    }
-    update() {}
-
     //------------------------
     // 状态机的事件
     //-----------------------
